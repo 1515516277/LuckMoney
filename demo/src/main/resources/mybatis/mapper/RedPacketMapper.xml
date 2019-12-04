@@ -1,0 +1,173 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.practice.dao.RedPacketDao">
+    <sql id="field">
+        rp.id,sum_money,single_money,`type`,sum_count,begin_date,end_date,remark,surplus_count,surplus_money,state,rpp_id,s_id,peoples
+    </sql>
+    <sql id="condition">
+        <where>
+            <if test="sumMoney != null and sumMoney != ''">
+                and sum_money=#{sumMoney}
+            </if>
+            <if test="singleMoney != null and singleMoney != ''">
+                and single_money=#{singleMoney}
+            </if>
+            <if test="type != null and type != ''">
+                and `type`=#{type}
+            </if>
+            <if test="sumCount != null and sumCount != ''">
+                and sum_count=#{sumCount}
+            </if>
+            <if test="remark != null and remark != ''">
+                and remark=#{remark}
+            </if>
+            and state=#{state}
+            <if test="sId != null and sId != ''">
+                and s_id=#{sId}
+            </if>
+            <if test="beginDate != null">
+                and begin_date &gt; #{beginDate}
+            </if>
+            <if test="endDate != null">
+                and end_date &lt;#{endDate}
+            </if>
+        </where>
+    </sql>
+    <sql id="addColumn">
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="sumMoney != null and sumMoney != ''">
+                sum_money,surplus_money,
+            </if>
+            <if test="singleMoney != null and singleMoney != ''">
+                single_money,
+            </if>
+            <if test="type != null and type != ''">
+                `type`,
+            </if>
+            <if test="sumCount != null and sumCount !=''">
+                sum_count,surplus_count,
+            </if>
+            <if test="beginDate != null">
+                begin_date,
+            </if>
+            <if test="endDate != null">
+                end_date,
+            </if>
+            <if test="endDate != null">
+                end_date,
+            </if>
+            <if test="remark != null and remark != ''">
+                remark,
+            </if>
+            state,
+            <if test="rppId != null and rppId != ''">
+                rpp_id,
+            </if>
+            <if test="sId != null and sId != ''">
+                s_id,
+            </if>
+            <if test="peoples != null and peoples != ''">
+                peoples,
+            </if>
+        </trim>
+    </sql>
+    <sql id="addValue">
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="sumMoney != null and sumMoney != ''">
+                #{sumMoney}*100,#{sumMoney}*100,
+            </if>
+            <if test="singleMoney != null and singleMoney != ''">
+                #{singleMoney},
+            </if>
+            <if test="type != null and type != ''">
+                #{type},
+            </if>
+            <if test="sumCount != null and sumCount !=''">
+                #{sumCount}, #{sumCount},
+            </if>
+            <if test="beginDate != null">
+                #{beginDate},
+            </if>
+            <if test="remark != null and remark != ''">
+                #{remark},
+            </if>
+            #{state},
+            <if test="rppId != null and rppId != ''">
+                #{rppId},
+            </if>
+            <if test="sId != null and sId != ''">
+                #{sId},
+            </if>
+            <if test="peoples != null and peoples != ''">
+                #{peoples},
+            </if>
+        </trim>
+    </sql>
+    <sql id="updateValue">
+        <set>
+            <if test="sumMoney != null and sumMoney != ''">
+                sum_money=#{sumMoney},
+            </if>
+            <if test="singleMoney != null and singleMoney != ''">
+                single_money=#{singleMoney},
+            </if>
+            <if test="type != null and type != ''">
+                `type`=#{type},
+            </if>
+            <if test="sumCount != null and sumCount !=''">
+                sum_count=#{sumCount},
+            </if>
+            <if test="beginDate != null">
+                begin_date=#{beginDate},
+            </if>
+            <if test="endDate != null">
+                end_date=#{endDate},
+            </if>
+            <if test="remark != null and remark != ''">
+                remark=#{remark},
+            </if>
+            <if test="surplusCount != null and surplusCount != ''">
+                surplus_count=#{surplusCount},
+            </if>
+            <if test="surplusMoney != null and surplusMoney != ''">
+                surplus_money=#{surplusMoney},
+            </if>
+            <if test="rppId != null and rppId != ''">
+                rpp_id=#{rppId},
+            </if>
+            <if test="sId != null and sId != ''">
+                s_id=#{sId},
+            </if>
+            state=#{state},
+        </set>
+    </sql>
+    <select id="selectRedPacketList" resultType="com.practice.pojo.dto.RedPacketDTO"
+            parameterType="com.practice.pojo.model.RedPacketModel">
+        select <include refid="field"></include>,rpp.name from ta_red_packet rp
+        left join ta_red_packet_people rpp on rp.rpp_id=rpp.id
+        <include refid="condition"></include>
+    </select>
+
+    <select id="selectRedPacketById" resultType="com.practice.pojo.dto.RedPacketDTO"
+            parameterType="com.practice.pojo.model.RedPacketModel">
+        select <include refid="field"></include> from ta_red_packet rp where id=#{id} and state=1
+    </select>
+
+    <insert id="addRedPacket" parameterType="com.practice.pojo.model.RedPacketModel">
+        insert into ta_red_packet <include refid="addColumn"></include>values
+        <include refid="addValue"></include>
+    </insert>
+
+    <update id="updateRedPacket" parameterType="com.practice.pojo.model.RedPacketModel">
+        update ta_red_packet <include refid="updateValue"></include> where id=#{id}
+    </update>
+
+    <update id="editWarsRedPacket" parameterType="com.practice.pojo.model.RedPacketModel">
+        update ta_red_packet set surplus_count=#{surplusCount},surplus_money=#{surplusMoney} where id=#{id}
+    </update>
+
+    <update id="editCommonRedPacket" parameterType="com.practice.pojo.model.RedPacketModel">
+        update ta_red_packet set surplus_count=#{surplusCount} where id=#{id}
+    </update>
+
+</mapper>

@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.practice.dao.RedPacketLogDao">
+    <insert id="addRedPacketLog" parameterType="com.practice.pojo.dto.RedPacketLogDTO">
+        insert into ta_red_packet_log(r_id,s_id,s_money,drow_date) values (#{rId},#{sId},#{sMoney},now());
+    </insert>
+
+    <select id="getAllRedPacketLog" parameterType="com.practice.pojo.dto.RedPacketLogDTO" resultType="com.practice.pojo.dto.RedPacketLogDTO">
+        select * from ta_red_packet_log
+        <where>
+            <if test="id != null and id != ''">and id=#{id}</if>
+            <if test="sId != null and sId != ''">and s_id=#{sId}</if>
+            <if test="rId != null and rId != ''">and r_id=#{rId}</if>
+        </where>
+    </select>
+
+</mapper>

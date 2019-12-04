@@ -1,0 +1,13 @@
+server:
+  port: 9999
+spring:
+  datasource:
+    driver-class-name: com.mysql.cj.jdbc.Driver
+    url: jdbc:mysql://db.amanbo-test.co.ke:3306/amanbo_co_ke?useUnicode=true&characterEncoding=UTF-8&autoReconnect=true&failOverReadOnly=false&statementInterceptors=com.right.framework.utils.ShowSqlStatementInterceptor
+    password: leadder@123
+    username: root
+  jpa:
+    show-sql: true
+mybatis:
+  config-location: classpath:mybatis/mybatis-config.xml
+  mapper-locations: classpath:mybatis/mapper/*.xml
